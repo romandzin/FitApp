@@ -1,6 +1,7 @@
 package com.fit.app.alina.ui.adapters
 
 import android.app.Activity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,7 @@ class VideosAdapter(private val dataSet: Array<String>, private val fragment: Ma
             .inflate(R.layout.item_video_layout, viewGroup, false)
         fragment.mainViewModel.userData.observe(fragment) {
             user = it
+            Log.d("tag", it.toString())
         }
         return ViewHolder(view)
     }

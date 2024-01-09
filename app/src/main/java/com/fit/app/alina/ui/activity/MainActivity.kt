@@ -1,5 +1,6 @@
 package com.fit.app.alina.ui.activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,11 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.ReportFragment.Companion.reportFragment
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import com.fit.app.alina.R
 import com.fit.app.alina.databinding.ActivityMainBinding
 import com.fit.app.alina.ui.fragment.EnterDataFragment
 import com.fit.app.alina.ui.fragment.LoginFragment
@@ -45,7 +51,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id, LoginFragment()).commit()
         loginViewModel.isLoggedIn.observe(this) {
             moveToEnterDataFragment()
         }
@@ -56,26 +61,34 @@ class MainActivity : AppCompatActivity() {
             openMainScreen()
             binding.profileIcon.isVisible = true
         }
+    }
+
+    private fun openMainScreen() {
+        findNavController(R.id.nav_host_fragment_container).navigate(R.id.action_enterDataFragment_to_mainScreenFragment)
         binding.profileIcon.setOnClickListener {
             mainViewModel.profileButtonClicked()
         }
         mainViewModel.profileOpen.observe(this) {
-            supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id, MainScreenFragment()).commit()
+            moveToProfileFragment()
         }
-    }
-
-    private fun openMainScreen() {
-        supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id, MainScreenFragment()).commit()
     }
 
     private fun moveToEnterDataFragment() {
-        supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id, EnterDataFragment()).commit()
+        findNavController(R.id.nav_host_fragment_container).navigate(R.id.action_loginFragment_to_enterDataFragment)
     }
 
-    override fun onBackPressed() {
-        mainViewModel.stage.observe(this) {
-            if (it < 1) super.onBackPressed()
+    private fun moveToProfileFragment() {
+        findNavController(R.id.nav_host_fragment_container).navigate(R.id.action_mainScreenFragment_to_profileFragment)
+        binding.profileIcon.setOnClickListener {
+            findNavController(R.id.nav_host_fragment_container).popBackStack()
+            binding.profileIcon.setOnClickListener {
+                mainViewModel.profileButtonClicked()
+            }
         }
+    }
+
+    @SuppressLint("MissingSuperCall")
+    override fun onBackPressed() {
         mainViewModel.closeStage()
     }
 
@@ -103,9 +116,11 @@ class MainActivity : AppCompatActivity() {
             val account = completedTask.getResult(ApiException::class.java)
             loginViewModel.onSignInButtonClicked(account.email.toString())
         } catch (e: ApiException) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w("tag", "signInResult:failed code=" + e.localizedMessage)
         }
+    }
+
+    object navigator {
+
     }
 }

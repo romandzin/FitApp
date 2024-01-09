@@ -45,7 +45,6 @@ class LoginViewModel(val context: Context): ViewModel() {
         currentUser.age = age
         currentUser.height = height
         currentUser.desiredWeight = desireWeight
-        Log.d("tag", currentUser.toString())
         isDataEntered.postValue(true)
         viewModelScope.launch {
             DataRepoImpl(context).insertUser(currentUser)

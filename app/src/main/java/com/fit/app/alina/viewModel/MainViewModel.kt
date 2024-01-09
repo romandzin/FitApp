@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(context: Context) : ViewModel() {
 
-    val userData = MutableLiveData<User>()
+    val userData = MutableLiveData<User?>()
     val profileOpen = MutableLiveData<Boolean>()
     private var currentUser: User? = null
     private val dataRepoImpl = DataRepoImpl(context)
@@ -33,16 +33,16 @@ class MainViewModel(context: Context) : ViewModel() {
     }
 
     fun closeStage() {
-        stage.postValue(stage.value?.minus(1))
+        if (stage.value != 1) stage.postValue(stage.value?.minus(1))
     }
 
     fun subscribedButtonClicked() {
-        if (currentUser?.isSubscribed == true) currentUser?.isSubscribed = false
-        else currentUser?.isSubscribed = true
+        if (currentUser!!.isSubscribed) currentUser!!.isSubscribed = false
+        else currentUser!!.isSubscribed = true
         userData.postValue(currentUser)
     }
 
     fun profileButtonClicked() {
-
+        profileOpen.postValue(true)
     }
 }
