@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "341046669841",
+    "project_id": "alina-fit",
+    "storage_bucket": "alina-fit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341046669841:android:7b3704ca8e65730afab7b0",
+        "android_client_info": {
+          "package_name": "com.fit.app.alina"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "341046669841-nd4c3q3i7p8jsntt338ksnghnkf6vkqk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAW-Wg7j5byH7eu5OBmQ0rHTOqCAQq2m58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "341046669841-nd4c3q3i7p8jsntt338ksnghnkf6vkqk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

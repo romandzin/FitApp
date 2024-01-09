@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.EnterDataFragment"
+    android:background="@color/main_yellow">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Введите Ваше имя"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/name"
+        android:layout_width="300dp"
+        android:layout_height="70dp"
+        android:hint="Имя"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="visible"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/maleButton"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="200dp"
+        android:text="Мужской"
+        android:textSize="20sp"
+        android:textColor="@color/main_yellow"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/femaleButton"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/main_purple"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/femaleButton"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="200dp"
+        android:text="Женский"
+        android:textSize="20sp"
+        android:textColor="@color/main_yellow"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/maleButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/main_purple"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/height"
+        android:layout_width="300dp"
+        android:layout_height="70dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintBottom_toTopOf="@id/age"
+        android:hint="Ваш рост в см"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/age"
+        android:layout_width="300dp"
+        android:layout_height="70dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/height"
+        app:layout_constraintBottom_toTopOf="@id/currentWeight"
+        android:hint="Сколько вам полных лет"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/currentWeight"
+        android:layout_width="300dp"
+        android:layout_height="70dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/age"
+        app:layout_constraintBottom_toTopOf="@id/desireWeight"
+        android:hint="Ваш текущий вес"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/desireWeight"
+        android:layout_width="300dp"
+        android:layout_height="70dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currentWeight"
+        app:layout_constraintBottom_toTopOf="@id/nextButton"
+        android:hint="Ваш желаемый вес"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/nextButton"
+        android:layout_width="180dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="50dp"
+        android:background="@color/main_purple"
+        android:text="Продолжить"
+        android:gravity="center"
+        android:textColor="@color/main_yellow"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
