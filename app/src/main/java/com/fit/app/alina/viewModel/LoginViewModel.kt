@@ -1,11 +1,10 @@
 package com.fit.app.alina.viewModel
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fit.app.alina.data.local.DataRepoImpl
+import com.fit.app.alina.data.local.DataImpl
 import com.fit.app.alina.data.User
 import kotlinx.coroutines.launch
 
@@ -19,7 +18,7 @@ class LoginViewModel(val context: Context): ViewModel() {
 
     init {
         viewModelScope.launch {
-            DataRepoImpl(context).deleteAll()
+            DataImpl(context).deleteAll()
         }
     }
     fun onLoginButtonClicked(phone: String) {
@@ -47,7 +46,7 @@ class LoginViewModel(val context: Context): ViewModel() {
         currentUser.desiredWeight = desireWeight
         isDataEntered.postValue(true)
         viewModelScope.launch {
-            DataRepoImpl(context).insertUser(currentUser)
+            DataImpl(context).insertUser(currentUser)
         }
     }
 

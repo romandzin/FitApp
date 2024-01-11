@@ -4,19 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.result.ActivityResultCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.ReportFragment.Companion.reportFragment
-import androidx.navigation.NavController
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.fit.app.alina.R
 import com.fit.app.alina.databinding.ActivityMainBinding
-import com.fit.app.alina.ui.fragment.EnterDataFragment
-import com.fit.app.alina.ui.fragment.LoginFragment
 import com.fit.app.alina.ui.fragment.MainScreenFragment
+import com.fit.app.alina.ui.fragment.ProfileFragment
 import com.fit.app.alina.viewModel.LoginViewModel
 import com.fit.app.alina.viewModel.MainViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -24,13 +22,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import ru.tinkoff.acquiring.sdk.AcquiringSdk
-import ru.tinkoff.acquiring.sdk.TinkoffAcquiring
-import ru.tinkoff.acquiring.sdk.models.enums.CheckType
-import ru.tinkoff.acquiring.sdk.models.options.screen.PaymentOptions
-import ru.tinkoff.acquiring.sdk.redesign.mainform.MainFormLauncher
-import ru.tinkoff.acquiring.sdk.utils.Money
-import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity() {
@@ -79,17 +70,36 @@ class MainActivity : AppCompatActivity() {
 
     private fun moveToProfileFragment() {
         findNavController(R.id.nav_host_fragment_container).navigate(R.id.action_mainScreenFragment_to_profileFragment)
-        binding.profileIcon.setOnClickListener {
-            findNavController(R.id.nav_host_fragment_container).popBackStack()
-            binding.profileIcon.setOnClickListener {
-                mainViewModel.profileButtonClicked()
+        binding.profileIcon.isVisible = false
+        mainViewModel.notificationOpen.observe(this) {
+            val navHostFragment: Fragment? =
+                supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container)
+            Log.d("tag", navHostFragment!!.childFragmentManager.fragments[0]::class.toString())
+            if (it != null)
+            {
+                findNavController(R.id.nav_host_fragment_container).navigate(R.id.action_profileFragment_to_notificationsFragment)
             }
+            mainViewModel.notificationOpen.removeObservers(this)
         }
     }
 
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
-        mainViewModel.closeStage()
+        val navHostFragment: Fragment? =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container)
+
+        if (navHostFragment!!.childFragmentManager.fragments[0]::class == MainScreenFragment::class)
+        {
+            mainViewModel.closeStage()
+        }
+        else {
+            if (navHostFragment.childFragmentManager.fragments[0]::class == ProfileFragment::class) binding.profileIcon.isVisible = true
+            goBackOnGraph()
+        }
+    }
+
+    private fun goBackOnGraph() {
+        findNavController(R.id.nav_host_fragment_container).popBackStack()
     }
 
     private fun signInGoogle() {
@@ -118,9 +128,5 @@ class MainActivity : AppCompatActivity() {
         } catch (e: ApiException) {
             Log.w("tag", "signInResult:failed code=" + e.localizedMessage)
         }
-    }
-
-    object navigator {
-
     }
 }

@@ -1,4 +1,4 @@
-package com.fit.app.alina.data.local
+package com.fit.app.alina.data.local.user
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
