@@ -5,11 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.fit.app.alina.R
-import com.fit.app.alina.data.User
+import com.fit.app.alina.data.dataClasses.User
 import com.fit.app.alina.databinding.FragmentNotificationsBinding
-import com.fit.app.alina.databinding.FragmentProfileBinding
 import com.fit.app.alina.ui.activity.MainActivity
+import com.fit.app.alina.ui.adapters.NotificationsAdapter
 import com.fit.app.alina.viewModel.MainViewModel
 
 class NotificationsFragment : Fragment() {
@@ -24,6 +23,9 @@ class NotificationsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        mainViewModel.notificationOpen.observe(viewLifecycleOwner)  {
+            binding.notificationsRecyclerView.adapter = NotificationsAdapter(it!!)
+        }
         return binding.root
     }
 }

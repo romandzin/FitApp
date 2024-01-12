@@ -1,11 +1,9 @@
 package com.fit.app.alina.data.local.notification
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.fit.app.alina.data.Notification
-import com.fit.app.alina.data.User
+import com.fit.app.alina.data.dataClasses.Notification
 
 @Dao
 interface NotificationDao {
@@ -13,7 +11,7 @@ interface NotificationDao {
     suspend fun inserNotificationText(notification: Notification)
 
     @Query("SELECT * FROM notification")
-    suspend fun getListOfNotifications(): List<String>
+    suspend fun getListOfNotifications(): List<Notification>
 
     @Query("DELETE FROM notification")
     suspend fun deleteAllNotifications();

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fit.app.alina.data.local.DataImpl
-import com.fit.app.alina.data.User
+import com.fit.app.alina.data.dataClasses.User
 import kotlinx.coroutines.launch
 
 

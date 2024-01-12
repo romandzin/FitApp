@@ -1,4 +1,4 @@
-package com.fit.app.alina.data
+package com.fit.app.alina.data.dataClasses
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

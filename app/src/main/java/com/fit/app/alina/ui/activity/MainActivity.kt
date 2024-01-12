@@ -22,6 +22,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.onesignal.OneSignal
+import com.onesignal.debug.LogLevel
+import com.onesignal.notifications.bridges.OneSignalHmsEventBridge
 
 
 class MainActivity : AppCompatActivity() {
@@ -39,6 +42,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initView()
+        OneSignal.Debug.logLevel = LogLevel.VERBOSE
+        OneSignal.initWithContext(this, "bd2fd052-d5ff-40d7-bed2-068de8f060fd")
+        
     }
 
     private fun initView() {
@@ -71,12 +77,13 @@ class MainActivity : AppCompatActivity() {
     private fun moveToProfileFragment() {
         findNavController(R.id.nav_host_fragment_container).navigate(R.id.action_mainScreenFragment_to_profileFragment)
         binding.profileIcon.isVisible = false
+    }
+
+    fun subscribeToNotification() {
         mainViewModel.notificationOpen.observe(this) {
-            val navHostFragment: Fragment? =
-                supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container)
-            Log.d("tag", navHostFragment!!.childFragmentManager.fragments[0]::class.toString())
             if (it != null)
             {
+                Log.d("tag", it.toString())
                 findNavController(R.id.nav_host_fragment_container).navigate(R.id.action_profileFragment_to_notificationsFragment)
             }
             mainViewModel.notificationOpen.removeObservers(this)

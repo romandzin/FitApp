@@ -8,11 +8,10 @@ import android.webkit.CookieManager
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebViewClient
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.fit.app.alina.data.User
+import com.fit.app.alina.data.dataClasses.User
 import com.fit.app.alina.databinding.FragmentMainScreenBinding
 import com.fit.app.alina.ui.activity.MainActivity
 import com.fit.app.alina.ui.adapters.VideosAdapter

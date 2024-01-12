@@ -1,15 +1,11 @@
 package com.fit.app.alina.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import com.fit.app.alina.R
-import com.fit.app.alina.data.User
-import com.fit.app.alina.databinding.FragmentMainScreenBinding
+import com.fit.app.alina.data.dataClasses.User
 import com.fit.app.alina.databinding.FragmentProfileBinding
 import com.fit.app.alina.ui.activity.MainActivity
 import com.fit.app.alina.viewModel.MainViewModel
@@ -29,9 +25,11 @@ class ProfileFragment : Fragment() {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         mainViewModel.userData.observe(viewLifecycleOwner) { userData ->
             user = userData
-            binding.name.text = "Привет, ${user!!.name}"
-            binding.parameters.text =
-                "Ваши параметры: \nВес: ${user!!.currentWeight} кг \nЖелаемый вес: ${user!!.desiredWeight} кг \nРост ${user!!.height} см\nПол: ${user!!.gender} \nВозраст: ${user!!.age}"
+            if (user != null) {
+                binding.name.text = "Привет, ${user!!.name}"
+                binding.parameters.text =
+                    "Ваши параметры: \nВес: ${user!!.currentWeight} кг \nЖелаемый вес: ${user!!.desiredWeight} кг \nРост ${user!!.height} см\nПол: ${user!!.gender} \nВозраст: ${user!!.age}"
+            }
         }
         binding.notification.setOnClickListener {
             mainViewModel.notificationButtonClicked()
@@ -39,4 +37,8 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).subscribeToNotification()
+    }
 }

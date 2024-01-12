@@ -2,8 +2,8 @@ package com.fit.app.alina.data.local
 
 import android.content.Context
 import androidx.room.Room
-import com.fit.app.alina.data.Notification
-import com.fit.app.alina.data.User
+import com.fit.app.alina.data.dataClasses.Notification
+import com.fit.app.alina.data.dataClasses.User
 import com.fit.app.alina.data.local.notification.IDataNotificationRepo
 import com.fit.app.alina.data.local.notification.NotificationDatabase
 import com.fit.app.alina.data.local.user.IDataUserRepo
@@ -45,7 +45,7 @@ class DataImpl(applicationContext: Context): IDataUserRepo, IDataNotificationRep
         notificationDao.inserNotificationText(notification)
     }
 
-    override suspend fun getListOfNotifications(): List<String> {
+    override suspend fun getListOfNotifications(): List<Notification> {
         return notificationDao.getListOfNotifications()
     }
 

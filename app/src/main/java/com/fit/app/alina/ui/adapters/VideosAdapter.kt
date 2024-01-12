@@ -1,6 +1,5 @@
 package com.fit.app.alina.ui.adapters
 
-import android.app.Activity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +10,10 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.fit.app.alina.R
-import com.fit.app.alina.data.User
+import com.fit.app.alina.data.dataClasses.User
 import com.fit.app.alina.ui.fragment.MainScreenFragment
 
 class VideosAdapter(private val dataSet: Array<String>, private val fragment: MainScreenFragment):
