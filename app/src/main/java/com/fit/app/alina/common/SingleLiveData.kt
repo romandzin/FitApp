@@ -10,15 +10,9 @@ class SingleLiveData<T> : MutableLiveData<T?>() {
         super.observe(owner) { t ->
             if (t != null) {
                 observer.onChanged(t)
-                this@SingleLiveData.removeObservers(owner)
-                this@SingleLiveData.observe(owner, observer)
+                postValue(null)
             }
         }
     }
 
-    override fun observeForever(observer: Observer<in T?>) {
-        super.observeForever(observer)
-        this@SingleLiveData.removeObserver(observer)
-        this@SingleLiveData.observeForever(observer)
-    }
 }
