@@ -8,15 +8,16 @@ import com.fit.app.alina.common.SingleLiveData
 import com.fit.app.alina.data.dataClasses.Notification
 import com.fit.app.alina.data.local.DataImpl
 import com.fit.app.alina.data.dataClasses.User
+import com.fit.app.alina.ui.activity.MainActivity
 import kotlinx.coroutines.launch
 
-class MainViewModel(context: Context) : ViewModel() {
+class MainViewModel(val activity: MainActivity) : ViewModel() {
 
     val userData = MutableLiveData<User?>()
     val profileOpen = MutableLiveData<Boolean>()
     val notificationOpen = SingleLiveData<List<Notification>>()
     private var currentUser: User? = null
-    private val dataRepoImpl = DataImpl(context)
+    private val dataRepoImpl = DataImpl(activity)
     var stage = MutableLiveData(1)
 
     init {
@@ -25,7 +26,7 @@ class MainViewModel(context: Context) : ViewModel() {
 
     private fun refreshUser() {
         viewModelScope.launch {
-            currentUser = dataRepoImpl.getUser()
+            currentUser = activity.currentUser  //Todo переписать метод обновления
             userData.postValue(currentUser)
         }
     }

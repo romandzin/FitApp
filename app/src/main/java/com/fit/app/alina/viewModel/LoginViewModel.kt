@@ -15,13 +15,13 @@ class LoginViewModel(val context: Context) : ViewModel() {
 
     val isNeedToRegister = MutableLiveData<Boolean>()
     val isGoogleSignIn = MutableLiveData<Boolean>()
-    val isOpenMainScreen = MutableLiveData<Boolean>()
+    val isOpenMainScreen = MutableLiveData<User>()
     val validationPhoneResult = SingleLiveData<String>()
     val validationAgeResult = SingleLiveData<String>()
     val validationHeightResult = SingleLiveData<String>()
     val validationCurrentWeightResult = SingleLiveData<String>()
     val validationDesireWeightResult = SingleLiveData<String>()
-    lateinit var currentUser: User //TODO user is null
+    var currentUser: User? = null
 
     fun onLoginButtonClicked(phone: String) {
         if (validatePhone(phone)) {
@@ -35,14 +35,15 @@ class LoginViewModel(val context: Context) : ViewModel() {
 
     private fun checkCreatedUser(mainKey: String, withGoogle: Boolean) {
         viewModelScope.launch {
-            val user = DataImpl(context).getUser()
-            if (user != null) {
-                if (user.key == mainKey) isOpenMainScreen.postValue(true)
-                else {
-                    if (withGoogle) startNewUserRegistrationWithGoogle(mainKey)
-                    else startNewUserRegistration(mainKey)
+            val users = DataImpl(context).getAllUsers()
+            for (i in users) {
+                if (i?.key == mainKey) {
+                    currentUser = i
+                    isOpenMainScreen.postValue(currentUser)
                 }
-            } else {
+
+            }
+            if (currentUser == null) {
                 if (withGoogle) startNewUserRegistrationWithGoogle(mainKey)
                 else startNewUserRegistration(mainKey)
             }
@@ -67,11 +68,11 @@ class LoginViewModel(val context: Context) : ViewModel() {
     }
 
     fun onNextNameButtonClicked(name: String) {
-        currentUser.name = name
+        currentUser?.name = name
     }
 
     fun onNextGenderButtonClicked(gender: String) {
-        currentUser.gender = gender
+        currentUser?.gender = gender
     }
 
     fun onNextDataButtonClicked(
@@ -81,13 +82,13 @@ class LoginViewModel(val context: Context) : ViewModel() {
         desireWeight: String
     ) {
         if (validateUserData(age, height, currentWeight, desireWeight)) {
-            currentUser.currentWeight = currentWeight
-            currentUser.age = age
-            currentUser.height = height
-            currentUser.desiredWeight = desireWeight
-            isOpenMainScreen.postValue(true)
+            currentUser?.currentWeight = currentWeight
+            currentUser?.age = age
+            currentUser?.height = height
+            currentUser?.desiredWeight = desireWeight
+            isOpenMainScreen.postValue(currentUser)
             viewModelScope.launch {
-                DataImpl(context).insertUser(currentUser)
+                DataImpl(context).insertUser(currentUser!!)
             }
         }
     }

@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.fit.app.alina.R
+import com.fit.app.alina.data.dataClasses.User
 import com.fit.app.alina.databinding.ActivityMainBinding
 import com.fit.app.alina.ui.fragment.MainScreenFragment
 import com.fit.app.alina.ui.fragment.ProfileFragment
@@ -30,6 +31,7 @@ import com.onesignal.debug.LogLevel
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    var currentUser: User? = null
     private val navController: NavController by lazy {
         findNavController(R.id.nav_host_fragment_container)
     }
@@ -56,7 +58,8 @@ class MainActivity : AppCompatActivity() {
         loginViewModel.isGoogleSignIn.observe(this) {
             signInGoogle()
         }
-        loginViewModel.isOpenMainScreen.observe(this) {
+        loginViewModel.isOpenMainScreen.observe(this) { user ->
+            currentUser = user
             openMainScreen()
             binding.profileIcon.isVisible = true
         }
@@ -159,7 +162,7 @@ class MainActivity : AppCompatActivity() {
             val account = completedTask.getResult(ApiException::class.java)
             loginViewModel.signInThroughGoogle(account.email.toString())
         } catch (e: ApiException) {
-            Log.w("tag", "signInResult:failed code=" + e.localizedMessage)
+            Log.w("tag", "signInResult:failed code=" + e.message + e.cause)
         }
     }
 }

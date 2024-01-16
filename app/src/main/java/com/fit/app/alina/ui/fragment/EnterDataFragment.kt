@@ -64,7 +64,7 @@ class EnterDataFragment : Fragment() {
     }
 
     private fun showGenderScreen() {
-        binding.title.text = "Привет, ${loginViewModel.currentUser.name}"
+        binding.title.text = "Привет, ${loginViewModel.currentUser?.name}"
         binding.name.isVisible = false
         binding.age.isVisible = false
         binding.currentWeight.isVisible = false

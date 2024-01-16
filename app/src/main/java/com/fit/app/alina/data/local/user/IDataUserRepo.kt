@@ -7,5 +7,7 @@ interface IDataUserRepo {
 
     suspend fun getUser(): User?
 
+    suspend fun getAllUsers(): List<User?>
+
     suspend fun deleteAll()
 }
