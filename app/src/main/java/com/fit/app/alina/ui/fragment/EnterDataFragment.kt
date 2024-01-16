@@ -12,6 +12,7 @@ import com.fit.app.alina.databinding.FragmentEnterDataBinding
 import com.fit.app.alina.databinding.FragmentLoginBinding
 import com.fit.app.alina.ui.activity.MainActivity
 import com.fit.app.alina.viewModel.LoginViewModel
+import kotlin.math.log
 
 class EnterDataFragment : Fragment() {
 
@@ -92,6 +93,18 @@ class EnterDataFragment : Fragment() {
         binding.femaleButton.isVisible = false
         binding.nextButton.isVisible = true
         binding.nextButton.setOnClickListener {
+            loginViewModel.validationAgeResult.observe(viewLifecycleOwner) {errorText ->
+                binding.age.error = errorText
+            }
+            loginViewModel.validationHeightResult.observe(viewLifecycleOwner) {errorText ->
+                binding.height.error = errorText
+            }
+            loginViewModel.validationDesireWeightResult.observe(viewLifecycleOwner) {errorText ->
+                binding.desireWeight.error = errorText
+            }
+            loginViewModel.validationCurrentWeightResult.observe(viewLifecycleOwner) {errorText ->
+                binding.currentWeight.error = errorText
+            }
             loginViewModel.onNextDataButtonClicked(
                 binding.age.text.toString(),
                 binding.height.text.toString(),

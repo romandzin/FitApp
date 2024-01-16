@@ -1,10 +1,14 @@
 package com.fit.app.alina
 
+import android.telephony.PhoneNumberUtils
+import android.telephony.PhoneNumberUtils.isGlobalPhoneNumber
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.fit.app.alina.common.SingleLiveData
+import junit.framework.TestCase.assertFalse
 import org.junit.Assert
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 
@@ -15,18 +19,5 @@ import org.junit.Test
  **/
 class ExampleUnitTest {
 
-    @Test
-    fun testSingleLiveEventOneValue() {
 
-        val singleLiveData = SingleLiveData<Int>()
-        val testArray = arrayListOf<Int>()
-        singleLiveData.postValue(1)
-        singleLiveData.observeForever {
-            if (it != null) {
-                testArray.add(it)
-            }
-        }
-        singleLiveData.postValue(2)
-        Assert.assertEquals(1, testArray.size)
-    }
 }

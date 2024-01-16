@@ -36,6 +36,9 @@
             android:id="@+id/action_mainScreenFragment_to_profileFragment"
             app:destination="@id/profileFragment"
             app:popUpTo="@id/mainScreenFragment" />
+        <action
+            android:id="@+id/action_mainScreenFragment_to_videoPlayerFragment"
+            app:destination="@id/videoPlayerFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -52,4 +55,9 @@
         android:name="com.fit.app.alina.ui.fragment.NotificationsFragment"
         android:label="fragment_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/videoPlayerFragment"
+        android:name="com.fit.app.alina.ui.fragment.VideoPlayerFragment"
+        android:label="fragment_video_player"
+        tools:layout="@layout/fragment_video_player" />
 </navigation>

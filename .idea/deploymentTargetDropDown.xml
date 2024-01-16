@@ -8,6 +8,12 @@
       <entry key="app">
         <State />
       </entry>
+      <entry key="creatingKeyWithEmailIsCorrect()">
+        <State />
+      </entry>
+      <entry key="creatingKeyWithPhoneIsCorrect()">
+        <State />
+      </entry>
     </value>
   </component>
 </project>

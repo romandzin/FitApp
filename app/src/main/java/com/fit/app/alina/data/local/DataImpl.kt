@@ -33,7 +33,7 @@ class DataImpl(applicationContext: Context): IDataUserRepo, IDataNotificationRep
        userDao.insertUser(user)
     }
 
-    override suspend fun getUser(): User {
+    override suspend fun getUser(): User? {
         return userDao.getUser()
     }
 

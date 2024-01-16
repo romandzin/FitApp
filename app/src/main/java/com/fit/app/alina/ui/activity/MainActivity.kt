@@ -2,15 +2,16 @@ package com.fit.app.alina.ui.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.fit.app.alina.R
 import com.fit.app.alina.databinding.ActivityMainBinding
 import com.fit.app.alina.ui.fragment.MainScreenFragment
@@ -24,12 +25,15 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.onesignal.OneSignal
 import com.onesignal.debug.LogLevel
-import com.onesignal.notifications.bridges.OneSignalHmsEventBridge
 
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
+    private val navController: NavController by lazy {
+        findNavController(R.id.nav_host_fragment_container)
+    }
+
     val loginViewModel: LoginViewModel by lazy {
         LoginViewModel(this)
     }
@@ -42,40 +46,64 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initView()
-        OneSignal.Debug.logLevel = LogLevel.VERBOSE
-        OneSignal.initWithContext(this, "bd2fd052-d5ff-40d7-bed2-068de8f060fd")
-        
+        initOneSignal()
     }
 
     private fun initView() {
-        loginViewModel.isLoggedIn.observe(this) {
+        loginViewModel.isNeedToRegister.observe(this) {
             moveToEnterDataFragment()
         }
         loginViewModel.isGoogleSignIn.observe(this) {
             signInGoogle()
         }
-        loginViewModel.isDataEntered.observe(this) {
+        loginViewModel.isOpenMainScreen.observe(this) {
             openMainScreen()
             binding.profileIcon.isVisible = true
         }
+        binding.bottomLayout.setupWithNavController(navController)
+        binding.bottomLayout.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.mainScreenFragment -> {
+                    binding.profileIcon.isVisible = true
+                    navController.navigate(it.itemId)
+                }
+                R.id.trainer -> {
+                    val telegramIntent = Intent(Intent.ACTION_VIEW)
+                    telegramIntent.setData(Uri.parse("http://telegram.me/petrova_alina_fitness"))
+                    startActivity(telegramIntent)
+                }
+                R.id.profileFragment -> {
+                    navController.navigate(it.itemId)
+                    binding.profileIcon.isVisible = false
+                }
+            }
+            return@setOnItemSelectedListener true
+        }
+    }
+
+    private fun initOneSignal() {
+        OneSignal.Debug.logLevel = LogLevel.VERBOSE
+        OneSignal.initWithContext(this, "bd2fd052-d5ff-40d7-bed2-068de8f060fd")
     }
 
     private fun openMainScreen() {
-        findNavController(R.id.nav_host_fragment_container).navigate(R.id.action_enterDataFragment_to_mainScreenFragment)
+        binding.bottomLayout.isVisible = true
+        navController.navigate(R.id.mainScreenFragment)
         binding.profileIcon.setOnClickListener {
             mainViewModel.profileButtonClicked()
         }
         mainViewModel.profileOpen.observe(this) {
             moveToProfileFragment()
         }
+        binding.profileIcon.isVisible = true
     }
 
     private fun moveToEnterDataFragment() {
-        findNavController(R.id.nav_host_fragment_container).navigate(R.id.action_loginFragment_to_enterDataFragment)
+        navController.navigate(R.id.action_loginFragment_to_enterDataFragment)
     }
 
     private fun moveToProfileFragment() {
-        findNavController(R.id.nav_host_fragment_container).navigate(R.id.action_mainScreenFragment_to_profileFragment)
+        navController.navigate(R.id.action_mainScreenFragment_to_profileFragment)
         binding.profileIcon.isVisible = false
     }
 
@@ -83,8 +111,7 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.notificationOpen.observe(this) {
             if (it != null)
             {
-                Log.d("tag", it.toString())
-                findNavController(R.id.nav_host_fragment_container).navigate(R.id.action_profileFragment_to_notificationsFragment)
+                navController.navigate(R.id.action_profileFragment_to_notificationsFragment)
             }
             mainViewModel.notificationOpen.removeObservers(this)
         }
@@ -106,7 +133,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun goBackOnGraph() {
-        findNavController(R.id.nav_host_fragment_container).popBackStack()
+        navController.popBackStack()
     }
 
     private fun signInGoogle() {
@@ -120,7 +147,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == 500) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
@@ -131,7 +157,7 @@ class MainActivity : AppCompatActivity() {
         try {
             Log.d("tag", completedTask.exception.toString())
             val account = completedTask.getResult(ApiException::class.java)
-            loginViewModel.onSignInButtonClicked(account.email.toString())
+            loginViewModel.signInThroughGoogle(account.email.toString())
         } catch (e: ApiException) {
             Log.w("tag", "signInResult:failed code=" + e.localizedMessage)
         }

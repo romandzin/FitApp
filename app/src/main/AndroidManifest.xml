@@ -21,15 +21,13 @@
             android:name=".ui.activity.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <service android:name=".common.NotificationServiceExtension"/>
-
             <meta-data android:name="com.onesignal.NotificationServiceExtension"
             android:value="com.fit.app.alina.common.NotificationServiceExtension" />
     </application>

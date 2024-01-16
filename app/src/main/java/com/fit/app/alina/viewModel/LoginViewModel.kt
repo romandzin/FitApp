@@ -1,34 +1,69 @@
 package com.fit.app.alina.viewModel
 
 import android.content.Context
+import android.telephony.PhoneNumberUtils
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fit.app.alina.common.SingleLiveData
 import com.fit.app.alina.data.local.DataImpl
 import com.fit.app.alina.data.dataClasses.User
 import kotlinx.coroutines.launch
 
 
-class LoginViewModel(val context: Context): ViewModel() {
+class LoginViewModel(val context: Context) : ViewModel() {
 
-    val isLoggedIn = MutableLiveData<Boolean>()
+    val isNeedToRegister = MutableLiveData<Boolean>()
     val isGoogleSignIn = MutableLiveData<Boolean>()
-    val isDataEntered = MutableLiveData<Boolean>()
-    lateinit var currentUser: User
+    val isOpenMainScreen = MutableLiveData<Boolean>()
+    val validationPhoneResult = SingleLiveData<String>()
+    val validationAgeResult = SingleLiveData<String>()
+    val validationHeightResult = SingleLiveData<String>()
+    val validationCurrentWeightResult = SingleLiveData<String>()
+    val validationDesireWeightResult = SingleLiveData<String>()
+    lateinit var currentUser: User //TODO user is null
 
-    init {
-        viewModelScope.launch {
-            DataImpl(context).deleteAll()
+    fun onLoginButtonClicked(phone: String) {
+        if (validatePhone(phone)) {
+            checkCreatedUser(phone, false)
         }
     }
-    fun onLoginButtonClicked(phone: String) {
-        isLoggedIn.postValue(true)
-        currentUser = User(key = phone, phone = phone)
+
+    fun signInThroughGoogle(email: String) {
+        checkCreatedUser(email, true)
     }
 
-    fun onSignInButtonClicked(email: String) {
-        isLoggedIn.postValue(true)
-        currentUser = User(key = email, email = email)
+    private fun checkCreatedUser(mainKey: String, withGoogle: Boolean) {
+        viewModelScope.launch {
+            val user = DataImpl(context).getUser()
+            if (user != null) {
+                if (user.key == mainKey) isOpenMainScreen.postValue(true)
+                else {
+                    if (withGoogle) startNewUserRegistrationWithGoogle(mainKey)
+                    else startNewUserRegistration(mainKey)
+                }
+            } else {
+                if (withGoogle) startNewUserRegistrationWithGoogle(mainKey)
+                else startNewUserRegistration(mainKey)
+            }
+        }
+    }
+
+    private fun startNewUserRegistration(mainKey: String) {
+        currentUser = User(key = mainKey, phone = mainKey)
+        isNeedToRegister.postValue(true)
+    }
+
+    private fun startNewUserRegistrationWithGoogle(mainKey: String) {
+        currentUser = User(key = mainKey, email = mainKey)
+        isNeedToRegister.postValue(true)
+    }
+
+    private fun validatePhone(phone: String): Boolean {
+        return if (phone == "" || !PhoneNumberUtils.isGlobalPhoneNumber(phone) || phone.length != 11) {
+            validationPhoneResult.postValue("Введите валидный номер телефона")
+            false
+        } else true
     }
 
     fun onNextNameButtonClicked(name: String) {
@@ -39,18 +74,56 @@ class LoginViewModel(val context: Context): ViewModel() {
         currentUser.gender = gender
     }
 
-    fun onNextDataButtonClicked(age: String, height: String, currentWeight: String, desireWeight: String) {
-        currentUser.currentWeight = currentWeight
-        currentUser.age = age
-        currentUser.height = height
-        currentUser.desiredWeight = desireWeight
-        isDataEntered.postValue(true)
-        viewModelScope.launch {
-            DataImpl(context).insertUser(currentUser)
+    fun onNextDataButtonClicked(
+        age: String,
+        height: String,
+        currentWeight: String,
+        desireWeight: String
+    ) {
+        if (validateUserData(age, height, currentWeight, desireWeight)) {
+            currentUser.currentWeight = currentWeight
+            currentUser.age = age
+            currentUser.height = height
+            currentUser.desiredWeight = desireWeight
+            isOpenMainScreen.postValue(true)
+            viewModelScope.launch {
+                DataImpl(context).insertUser(currentUser)
+            }
         }
     }
 
-    fun onSignInButtonClicked() {
+    private fun validateUserData(
+        age: String,
+        height: String,
+        currentWeight: String,
+        desireWeight: String
+    ): Boolean {
+        when ("") {
+            age -> {
+                validationAgeResult.postValue("Введите валидный возраст")
+                return false
+            }
+
+            height -> {
+                validationHeightResult.postValue("Введите валидный рост")
+                return false
+            }
+
+            currentWeight -> {
+                validationCurrentWeightResult.postValue("Введите валидный текущий вес")
+                return false
+            }
+
+            desireWeight -> {
+                validationDesireWeightResult.postValue("Введите валидный желаемый вес")
+                return false
+            }
+
+            else -> return true
+        }
+    }
+
+    fun signInGoogleButtonClicked() {
         isGoogleSignIn.postValue(true)
     }
 }

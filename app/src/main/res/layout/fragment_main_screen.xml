@@ -23,7 +23,7 @@
        android:id="@+id/training_text"
        android:layout_width="0dp"
        android:layout_height="wrap_content"
-       android:textSize="28sp"
+       android:textSize="24sp"
        android:textColor="@color/dark_yellow"
        android:layout_marginTop="20dp"
        android:text="Онлайн тренировки в домашних условиях"

@@ -30,17 +30,28 @@
         app:layout_constraintTop_toTopOf="@id/alinaText"
         app:layout_constraintBottom_toBottomOf="@id/alinaText"/>
 
-    <fragment
-        android:id="@+id/nav_host_fragment_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        app:navGraph="@navigation/nav_graph"
-        app:defaultNavHost="true"
-        app:layout_constraintTop_toBottomOf="@id/alinaText"
+            <fragment
+                android:id="@+id/nav_host_fragment_container"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                app:navGraph="@navigation/nav_graph"
+                app:defaultNavHost="true"
+                app:layout_constraintTop_toBottomOf="@id/alinaText"
+                app:layout_constraintBottom_toBottomOf="@id/bottom_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/menu_bottom_nav_bar"
+        app:itemTextColor="@color/main_yellow"
+        app:itemIconTint="@color/main_yellow"
+        android:background="@color/main_purple"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
