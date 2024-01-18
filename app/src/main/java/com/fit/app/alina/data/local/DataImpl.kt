@@ -2,8 +2,10 @@ package com.fit.app.alina.data.local
 
 import android.content.Context
 import androidx.room.Room
+import com.fit.app.alina.data.dataClasses.Article
 import com.fit.app.alina.data.dataClasses.Notification
 import com.fit.app.alina.data.dataClasses.User
+import com.fit.app.alina.data.local.articles.Articles
 import com.fit.app.alina.data.local.notification.IDataNotificationRepo
 import com.fit.app.alina.data.local.notification.NotificationDatabase
 import com.fit.app.alina.data.local.user.IDataUserRepo
@@ -55,5 +57,9 @@ class DataImpl(applicationContext: Context): IDataUserRepo, IDataNotificationRep
 
     override suspend fun deleteAllNotifications() {
         notificationDao.deleteAllNotifications()
+    }
+
+    fun getArticles(): ArrayList<Article> {
+        return Articles.articlesList
     }
 }

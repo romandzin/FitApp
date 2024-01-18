@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.CookieManager
-import android.webkit.WebChromeClient
-import android.webkit.WebSettings
-import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.fit.app.alina.data.dataClasses.Comment
 import com.fit.app.alina.data.dataClasses.User
+import com.fit.app.alina.data.dataClasses.Video
 import com.fit.app.alina.databinding.FragmentMainScreenBinding
 import com.fit.app.alina.ui.activity.MainActivity
 import com.fit.app.alina.ui.adapters.VideosAdapter
@@ -58,6 +56,7 @@ class MainScreenFragment : Fragment() {
     }
 
     private fun initView() {
+        mainViewModel.mainScreenOpened()
         binding.weightLoss.setOnClickListener {
             mainViewModel.openNewStage()
         }
@@ -105,24 +104,7 @@ class MainScreenFragment : Fragment() {
     }
 
     fun initChosenVideo(videoUrl: String) {
-        mainViewModel.openNewStage()
-        binding.chosen.loadUrl(videoUrl)
-        val set = binding.chosen.settings
-        set.setSupportZoom(true)
-        set.domStorageEnabled = true
-        set.builtInZoomControls = true
-        set.allowFileAccess = true
-        set.allowContentAccess = true
-        set.loadWithOverviewMode = true
-        set.setGeolocationEnabled(true)
-        set.pluginState = WebSettings.PluginState.ON
-        set.javaScriptCanOpenWindowsAutomatically = true
-        set.javaScriptEnabled = true
-        set.supportMultipleWindows()
-        CookieManager.getInstance().setAcceptCookie(true)
-        binding.chosen.webViewClient = object : WebViewClient() {}
-        binding.chosen.webChromeClient = object : WebChromeClient() {}
-        binding.videos.isVisible = false
-        binding.chosen.isVisible = true
+        val testVideo = Video(videoUrl, "Cool description", arrayListOf(Comment("https://get.pxhere.com/photo/person-people-portrait-facial-expression-hairstyle-smile-emotion-portrait-photography-134689.jpg", "Bob", "Cool Video!", "14:54")))
+        mainViewModel.openVideoScreen(testVideo)
     }
 }

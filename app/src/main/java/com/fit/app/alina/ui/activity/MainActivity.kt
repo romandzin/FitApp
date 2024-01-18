@@ -17,6 +17,7 @@ import com.fit.app.alina.data.dataClasses.User
 import com.fit.app.alina.databinding.ActivityMainBinding
 import com.fit.app.alina.ui.fragment.MainScreenFragment
 import com.fit.app.alina.ui.fragment.ProfileFragment
+import com.fit.app.alina.ui.fragment.VideoPlayerFragment
 import com.fit.app.alina.viewModel.LoginViewModel
 import com.fit.app.alina.viewModel.MainViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -26,6 +27,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.onesignal.OneSignal
 import com.onesignal.debug.LogLevel
+import kotlin.math.log
 
 
 class MainActivity : AppCompatActivity() {
@@ -63,6 +65,13 @@ class MainActivity : AppCompatActivity() {
             openMainScreen()
             binding.profileIcon.isVisible = true
         }
+        mainViewModel.currentOpenedVideo.observe(this) {
+            navController.navigate(R.id.videoPlayerFragment)
+            binding.profileIcon.isVisible = false
+        }
+        mainViewModel.chosenArticleData.observe(this) {
+            moveToCurrentArticleFragment()
+        }
         binding.bottomLayout.setupWithNavController(navController)
         binding.bottomLayout.setOnItemSelectedListener {
             when (it.itemId) {
@@ -70,12 +79,19 @@ class MainActivity : AppCompatActivity() {
                     binding.profileIcon.isVisible = true
                     navController.navigate(it.itemId)
                 }
+
                 R.id.trainer -> {
                     val telegramIntent = Intent(Intent.ACTION_VIEW)
                     telegramIntent.setData(Uri.parse("http://telegram.me/petrova_alina_fitness"))
                     startActivity(telegramIntent)
                 }
+
                 R.id.profileFragment -> {
+                    navController.navigate(it.itemId)
+                    binding.profileIcon.isVisible = false
+                }
+
+                R.id.articlesFragment -> {
                     navController.navigate(it.itemId)
                     binding.profileIcon.isVisible = false
                 }
@@ -89,6 +105,7 @@ class MainActivity : AppCompatActivity() {
         OneSignal.initWithContext(this, "bd2fd052-d5ff-40d7-bed2-068de8f060fd")
     }
 
+    //Navigation
     private fun openMainScreen() {
         binding.bottomLayout.isVisible = true
         navController.navigate(R.id.mainScreenFragment)
@@ -99,6 +116,10 @@ class MainActivity : AppCompatActivity() {
             moveToProfileFragment()
         }
         binding.profileIcon.isVisible = true
+    }
+
+    private fun moveToCurrentArticleFragment() {
+        navController.navigate(R.id.currentArticleFragment)
     }
 
     private fun moveToEnterDataFragment() {
@@ -112,26 +133,10 @@ class MainActivity : AppCompatActivity() {
 
     fun subscribeToNotification() {
         mainViewModel.notificationOpen.observe(this) {
-            if (it != null)
-            {
+            if (it != null) {
                 navController.navigate(R.id.action_profileFragment_to_notificationsFragment)
             }
             mainViewModel.notificationOpen.removeObservers(this)
-        }
-    }
-
-    @SuppressLint("MissingSuperCall")
-    override fun onBackPressed() {
-        val navHostFragment: Fragment? =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container)
-
-        if (navHostFragment!!.childFragmentManager.fragments[0]::class == MainScreenFragment::class)
-        {
-            mainViewModel.closeStage()
-        }
-        else {
-            if (navHostFragment.childFragmentManager.fragments[0]::class == ProfileFragment::class) binding.profileIcon.isVisible = true
-            goBackOnGraph()
         }
     }
 
@@ -139,6 +144,21 @@ class MainActivity : AppCompatActivity() {
         navController.popBackStack()
     }
 
+    @SuppressLint("MissingSuperCall")
+    override fun onBackPressed() {
+        val navHostFragment: Fragment? =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container)
+
+        if (navHostFragment!!.childFragmentManager.fragments[0]::class == MainScreenFragment::class) {
+            mainViewModel.closeStage()
+        } else {
+            if (navHostFragment.childFragmentManager.fragments[0]::class == ProfileFragment::class || navHostFragment.childFragmentManager.fragments[0]::class == VideoPlayerFragment::class) binding.profileIcon.isVisible =
+                true
+            goBackOnGraph()
+        }
+    }
+
+    //Authorization in Gooogle
     private fun signInGoogle() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()

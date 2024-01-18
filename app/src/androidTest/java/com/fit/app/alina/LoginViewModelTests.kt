@@ -38,10 +38,10 @@ class LoginViewModelTests {
         val handler = Handler(Looper.getMainLooper());
         handler.post {
             loginViewModel.isNeedToRegister.observeForever {
-                assertEquals("email", loginViewModel.currentUser.key)
+                assertEquals("email", loginViewModel.currentUser?.key)
             }
             loginViewModel.isOpenMainScreen.observeForever {
-                assertEquals("email", loginViewModel.currentUser.key)
+                assertEquals("email", loginViewModel.currentUser?.key)
             }
             loginViewModel.signInThroughGoogle("email")
         }
@@ -52,10 +52,10 @@ class LoginViewModelTests {
         val handler = Handler(Looper.getMainLooper());
         handler.post {
             loginViewModel.isNeedToRegister.observeForever {
-                assertEquals("89610915748", loginViewModel.currentUser.key)
+                assertEquals("89610915748", loginViewModel.currentUser?.key)
             }
             loginViewModel.isOpenMainScreen.observeForever {
-                assertEquals("89610915748", loginViewModel.currentUser.key)
+                assertEquals("89610915748", loginViewModel.currentUser?.key)
             }
             loginViewModel.onLoginButtonClicked(phone = "89610915748")
         }

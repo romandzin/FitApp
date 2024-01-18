@@ -39,6 +39,9 @@
         <action
             android:id="@+id/action_mainScreenFragment_to_videoPlayerFragment"
             app:destination="@id/videoPlayerFragment" />
+        <action
+            android:id="@+id/action_mainScreenFragment_to_articlesFragment"
+            app:destination="@id/articlesFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -60,4 +63,18 @@
         android:name="com.fit.app.alina.ui.fragment.VideoPlayerFragment"
         android:label="fragment_video_player"
         tools:layout="@layout/fragment_video_player" />
+    <fragment
+        android:id="@+id/articlesFragment"
+        android:name="com.fit.app.alina.ui.fragment.ArticlesFragment"
+        android:label="fragment_articles"
+        tools:layout="@layout/fragment_articles" >
+        <action
+            android:id="@+id/action_articlesFragment_to_currentArticleFragment"
+            app:destination="@id/currentArticleFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/currentArticleFragment"
+        android:name="com.fit.app.alina.ui.fragment.CurrentArticleFragment"
+        android:label="fragment_current_article"
+        tools:layout="@layout/fragment_current_article" />
 </navigation>

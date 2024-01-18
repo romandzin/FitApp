@@ -10,7 +10,7 @@
     <item android:id="@id/mainScreenFragment"
         android:title="Тренировки"
         android:icon="@drawable/ic_heart"/>
-    <item android:id="@+id/articles"
+    <item android:id="@id/articlesFragment"
         android:title="Статьи"
         android:icon="@drawable/ic_news"/>
     <item android:id="@+id/trainer"
