@@ -1,27 +1,35 @@
 package com.fit.app.alina.viewModel
 
-import android.content.Context
 import android.telephony.PhoneNumberUtils
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fit.app.alina.common.SingleLiveData
-import com.fit.app.alina.data.local.DataImpl
 import com.fit.app.alina.data.dataClasses.User
+import com.fit.app.alina.data.local.DataImpl
+import com.fit.app.alina.data.remote.DataRemoteImpl
+import com.fit.app.alina.ui.activity.MainActivity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.random.Random
 
 
-class LoginViewModel(val context: Context) : ViewModel() {
+class LoginViewModel(val activity: MainActivity) : ViewModel() {
 
     val isNeedToRegister = MutableLiveData<Boolean>()
     val isGoogleSignIn = MutableLiveData<Boolean>()
     val isOpenMainScreen = MutableLiveData<User>()
+    val isOpenDialog = MutableLiveData<String>()
     val validationPhoneResult = SingleLiveData<String>()
     val validationAgeResult = SingleLiveData<String>()
     val validationHeightResult = SingleLiveData<String>()
     val validationCurrentWeightResult = SingleLiveData<String>()
     val validationDesireWeightResult = SingleLiveData<String>()
     var currentUser: User? = null
+
+    var phone = ""
 
     fun onLoginButtonClicked(phone: String) {
         if (validatePhone(phone)) {
@@ -35,7 +43,7 @@ class LoginViewModel(val context: Context) : ViewModel() {
 
     private fun checkCreatedUser(mainKey: String, withGoogle: Boolean) {
         viewModelScope.launch {
-            val users = DataImpl(context).getAllUsers()
+            val users = DataImpl(activity).getAllUsers()
             for (i in users) {
                 if (i?.key == mainKey) {
                     currentUser = i
@@ -51,13 +59,36 @@ class LoginViewModel(val context: Context) : ViewModel() {
     }
 
     private fun startNewUserRegistration(mainKey: String) {
-        currentUser = User(key = mainKey, phone = mainKey)
+        phone = mainKey
+        checkSmsValidation()
+    }
+
+    fun smsValidated() {
+        currentUser = User(key = phone, phone = phone)
         isNeedToRegister.postValue(true)
     }
 
     private fun startNewUserRegistrationWithGoogle(mainKey: String) {
         currentUser = User(key = mainKey, email = mainKey)
         isNeedToRegister.postValue(true)
+
+    }
+
+    private fun checkSmsValidation() {
+        val randomNum = getRandomNumberString()
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                DataRemoteImpl.service.postSms("Ваш код подтверждения - $randomNum", phone).execute()
+                Log.d("tag", randomNum)
+                isOpenDialog.postValue(randomNum)
+            }
+        }
+    }
+
+    private fun getRandomNumberString(): String {
+        val rnd = Random
+        val number: Int = rnd.nextInt(999999)
+        return String.format("%06d", number)
     }
 
     private fun validatePhone(phone: String): Boolean {
@@ -88,7 +119,7 @@ class LoginViewModel(val context: Context) : ViewModel() {
             currentUser?.desiredWeight = desireWeight
             isOpenMainScreen.postValue(currentUser)
             viewModelScope.launch {
-                DataImpl(context).insertUser(currentUser!!)
+                DataImpl(activity).insertUser(currentUser!!)
             }
         }
     }

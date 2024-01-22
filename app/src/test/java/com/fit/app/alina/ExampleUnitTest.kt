@@ -8,8 +8,10 @@ import androidx.lifecycle.Observer
 import com.fit.app.alina.common.SingleLiveData
 import junit.framework.TestCase.assertFalse
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.random.Random
 
 
 /**
@@ -19,5 +21,12 @@ import org.junit.Test
  **/
 class ExampleUnitTest {
 
+    @Test
+    fun testGenerateNum() {
+        val rnd = Random
+        val number: Int = rnd.nextInt(999999)
+        val formattedNumber = String.format("%06d", number)
+        assertEquals(number.toString(), formattedNumber)
+    }
 
 }

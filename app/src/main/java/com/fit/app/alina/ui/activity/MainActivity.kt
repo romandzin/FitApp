@@ -15,6 +15,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.fit.app.alina.R
 import com.fit.app.alina.data.dataClasses.User
 import com.fit.app.alina.databinding.ActivityMainBinding
+import com.fit.app.alina.ui.fragment.ConfirmPhoneDialog
 import com.fit.app.alina.ui.fragment.MainScreenFragment
 import com.fit.app.alina.ui.fragment.ProfileFragment
 import com.fit.app.alina.ui.fragment.VideoPlayerFragment
@@ -59,6 +60,9 @@ class MainActivity : AppCompatActivity() {
         }
         loginViewModel.isGoogleSignIn.observe(this) {
             signInGoogle()
+        }
+        loginViewModel.isOpenDialog.observe(this) { confirmationCode ->
+            showConfirmationDialog(confirmationCode)
         }
         loginViewModel.isOpenMainScreen.observe(this) { user ->
             currentUser = user
@@ -156,6 +160,11 @@ class MainActivity : AppCompatActivity() {
                 true
             goBackOnGraph()
         }
+    }
+
+    private fun showConfirmationDialog(code: String) {
+        ConfirmPhoneDialog(code)
+            .show(supportFragmentManager, "ConfirmationDialogFragmentTag")
     }
 
     //Authorization in Gooogle

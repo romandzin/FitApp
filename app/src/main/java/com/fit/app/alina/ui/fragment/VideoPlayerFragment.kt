@@ -32,6 +32,13 @@ class VideoPlayerFragment : Fragment() {
     }
 
     private fun initView() {
+        prepareWebView()
+        binding.completeButton.setOnClickListener {
+            //TODO выполнение тренировки
+        }
+    }
+
+    private fun prepareWebView() {
         val set = binding.chosen.settings
         set.setSupportZoom(true)
         set.domStorageEnabled = true

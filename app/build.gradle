@@ -93,7 +93,17 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-messaging:23.4.0")
 
+    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
+
+    implementation("com.google.firebase:firebase-auth:22.3.1")
+
     implementation 'com.onesignal:OneSignal:[5.1.0, 5.99.99]'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+
+    implementation 'com.squareup.retrofit2:converter-scalars:2.5.0'
 
     def nav_version = "2.7.6"
     // Kotlin
@@ -105,4 +115,6 @@ dependencies {
 
     // Testing Navigation
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+
+    implementation 'androidx.browser:browser:1.7.0'
 }
