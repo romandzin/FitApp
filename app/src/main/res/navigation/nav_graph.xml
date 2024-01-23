@@ -68,13 +68,5 @@
         android:name="com.fit.app.alina.ui.fragment.ArticlesFragment"
         android:label="fragment_articles"
         tools:layout="@layout/fragment_articles" >
-        <action
-            android:id="@+id/action_articlesFragment_to_currentArticleFragment"
-            app:destination="@id/currentArticleFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/currentArticleFragment"
-        android:name="com.fit.app.alina.ui.fragment.CurrentArticleFragment"
-        android:label="fragment_current_article"
-        tools:layout="@layout/fragment_current_article" />
 </navigation>

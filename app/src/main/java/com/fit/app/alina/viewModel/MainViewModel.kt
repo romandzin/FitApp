@@ -1,11 +1,9 @@
 package com.fit.app.alina.viewModel
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fit.app.alina.common.SingleLiveData
-import com.fit.app.alina.data.dataClasses.Article
 import com.fit.app.alina.data.dataClasses.Notification
 import com.fit.app.alina.data.local.DataImpl
 import com.fit.app.alina.data.dataClasses.User
@@ -19,8 +17,6 @@ class MainViewModel(val activity: MainActivity) : ViewModel() {
     val profileOpen = MutableLiveData<Boolean>()
     val notificationOpen = SingleLiveData<List<Notification>>()
     val currentOpenedVideo = MutableLiveData<Video>()
-    val articlesData = MutableLiveData<ArrayList<Article>>()
-    val chosenArticleData = MutableLiveData<Article>()
 
     private var currentUser: User? = null
     private val dataRepoImpl = DataImpl(activity)
@@ -32,7 +28,7 @@ class MainViewModel(val activity: MainActivity) : ViewModel() {
 
     private fun refreshUser() {
         viewModelScope.launch {
-            currentUser = activity.currentUser
+            currentUser = activity.currentUser //TODO сделать сохранение пользователя
             userData.postValue(currentUser)
         }
     }
@@ -68,13 +64,5 @@ class MainViewModel(val activity: MainActivity) : ViewModel() {
 
     fun mainScreenOpened() {
         refreshUser()
-    }
-
-    fun articlesScreenOpened() {
-        articlesData.postValue(dataRepoImpl.getArticles())
-    }
-
-    fun articleChosed(article: Article) {
-        chosenArticleData.postValue(article)
     }
 }

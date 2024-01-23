@@ -29,7 +29,8 @@ class LoginViewModel(val activity: MainActivity) : ViewModel() {
     val validationDesireWeightResult = SingleLiveData<String>()
     var currentUser: User? = null
 
-    var phone = ""
+    private var phone = ""
+    private var randomNum = ""
 
     fun onLoginButtonClicked(phone: String) {
         if (validatePhone(phone)) {
@@ -59,8 +60,11 @@ class LoginViewModel(val activity: MainActivity) : ViewModel() {
     }
 
     private fun startNewUserRegistration(mainKey: String) {
-        phone = mainKey
-        checkSmsValidation()
+        if (phone != mainKey) {
+            phone = mainKey
+            checkSmsValidation()
+        }
+        else isOpenDialog.postValue(randomNum)
     }
 
     fun smsValidated() {
@@ -75,7 +79,7 @@ class LoginViewModel(val activity: MainActivity) : ViewModel() {
     }
 
     private fun checkSmsValidation() {
-        val randomNum = getRandomNumberString()
+        randomNum = getRandomNumberString()
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 DataRemoteImpl.service.postSms("Ваш код подтверждения - $randomNum", phone).execute()

@@ -1,5 +1,6 @@
 package com.fit.app.alina.ui.fragment
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -22,6 +23,7 @@ class ConfirmPhoneDialog(val code: String) : DialogFragment() {
             .create()
     }
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onStart() {
         super.onStart()
         val dialog = dialog as AlertDialog?

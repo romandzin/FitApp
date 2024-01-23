@@ -1,10 +1,12 @@
 package com.fit.app.alina.ui.activity
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
@@ -15,6 +17,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.fit.app.alina.R
 import com.fit.app.alina.data.dataClasses.User
 import com.fit.app.alina.databinding.ActivityMainBinding
+import com.fit.app.alina.ui.fragment.ArticlesFragment
 import com.fit.app.alina.ui.fragment.ConfirmPhoneDialog
 import com.fit.app.alina.ui.fragment.MainScreenFragment
 import com.fit.app.alina.ui.fragment.ProfileFragment
@@ -52,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         initView()
         initOneSignal()
+        if (getUser() != "") openMainScreen()
     }
 
     private fun initView() {
@@ -73,14 +77,15 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.videoPlayerFragment)
             binding.profileIcon.isVisible = false
         }
-        mainViewModel.chosenArticleData.observe(this) {
-            moveToCurrentArticleFragment()
+        binding.backButton.setOnClickListener {
+            onBackPressed()
         }
         binding.bottomLayout.setupWithNavController(navController)
         binding.bottomLayout.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.mainScreenFragment -> {
                     binding.profileIcon.isVisible = true
+                    binding.backButton.visibility = View.INVISIBLE
                     navController.navigate(it.itemId)
                 }
 
@@ -93,11 +98,13 @@ class MainActivity : AppCompatActivity() {
                 R.id.profileFragment -> {
                     navController.navigate(it.itemId)
                     binding.profileIcon.isVisible = false
+                    binding.backButton.isVisible = true
                 }
 
                 R.id.articlesFragment -> {
                     navController.navigate(it.itemId)
                     binding.profileIcon.isVisible = false
+                    binding.backButton.isVisible = true
                 }
             }
             return@setOnItemSelectedListener true
@@ -107,6 +114,11 @@ class MainActivity : AppCompatActivity() {
     private fun initOneSignal() {
         OneSignal.Debug.logLevel = LogLevel.VERBOSE
         OneSignal.initWithContext(this, "bd2fd052-d5ff-40d7-bed2-068de8f060fd")
+    }
+
+    private fun showConfirmationDialog(code: String) {
+        ConfirmPhoneDialog(code)
+            .show(supportFragmentManager, "ConfirmationDialogFragmentTag")
     }
 
     //Navigation
@@ -120,10 +132,7 @@ class MainActivity : AppCompatActivity() {
             moveToProfileFragment()
         }
         binding.profileIcon.isVisible = true
-    }
-
-    private fun moveToCurrentArticleFragment() {
-        navController.navigate(R.id.currentArticleFragment)
+        binding.backButton.visibility = View.INVISIBLE
     }
 
     private fun moveToEnterDataFragment() {
@@ -133,6 +142,7 @@ class MainActivity : AppCompatActivity() {
     private fun moveToProfileFragment() {
         navController.navigate(R.id.action_mainScreenFragment_to_profileFragment)
         binding.profileIcon.isVisible = false
+        binding.backButton.isVisible = true
     }
 
     fun subscribeToNotification() {
@@ -155,16 +165,23 @@ class MainActivity : AppCompatActivity() {
 
         if (navHostFragment!!.childFragmentManager.fragments[0]::class == MainScreenFragment::class) {
             mainViewModel.closeStage()
+        } else if (navHostFragment.childFragmentManager.fragments[0]::class == ArticlesFragment::class) {
+            val binding =
+                (navHostFragment.childFragmentManager.fragments[0] as ArticlesFragment).binding
+            if (binding.articles.canGoBack()) binding.articles.goBack()
+            else {
+                this.binding.backButton.visibility = View.INVISIBLE
+                this.binding.profileIcon.isVisible = true
+                goBackOnGraph()
+            }
         } else {
-            if (navHostFragment.childFragmentManager.fragments[0]::class == ProfileFragment::class || navHostFragment.childFragmentManager.fragments[0]::class == VideoPlayerFragment::class) binding.profileIcon.isVisible =
-                true
+            if (navHostFragment.childFragmentManager.fragments[0]::class == ProfileFragment::class || navHostFragment.childFragmentManager.fragments[0]::class == VideoPlayerFragment::class) {
+                binding.profileIcon.isVisible =
+                    true
+                binding.backButton.visibility = View.INVISIBLE
+            }
             goBackOnGraph()
         }
-    }
-
-    private fun showConfirmationDialog(code: String) {
-        ConfirmPhoneDialog(code)
-            .show(supportFragmentManager, "ConfirmationDialogFragmentTag")
     }
 
     //Authorization in Gooogle
@@ -193,5 +210,19 @@ class MainActivity : AppCompatActivity() {
         } catch (e: ApiException) {
             Log.w("tag", "signInResult:failed code=" + e.message + e.cause)
         }
+    }
+
+    //Saving user
+    fun saveUser(key: String) {
+        val sharedPreferences = getSharedPreferences(
+            "user", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("key", key)
+        editor.apply()
+    }
+
+    fun getUser(): String? {
+        val sharedPref = getSharedPreferences("user", Context.MODE_PRIVATE)
+        return sharedPref.getString("key", "")
     }
 }

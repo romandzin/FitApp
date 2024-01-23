@@ -31,6 +31,7 @@ class MainScreenFragment : Fragment() {
         binding = FragmentMainScreenBinding.inflate(inflater, container, false)
         mainViewModel.userData.observe(viewLifecycleOwner) { userData ->
             user = userData
+            if (userData != null) (activity as MainActivity).saveUser(userData.key)
         }
         initView()
         mainViewModel.stage.observe(viewLifecycleOwner) {

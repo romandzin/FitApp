@@ -7,11 +7,10 @@
     tools:context=".ui.fragment.ArticlesFragment"
     android:background="@color/main_yellow">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <WebView
         android:id="@+id/articles"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_article"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        tools:listitem="@layout/item_article" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

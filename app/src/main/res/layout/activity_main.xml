@@ -7,6 +7,17 @@
     tools:context=".ui.activity.MainActivity"
     android:background="@color/main_yellow">
 
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/ic_back"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <TextView
         android:id="@+id/alinaText"
         android:layout_width="wrap_content"
@@ -14,10 +25,10 @@
         android:text="Alina Fit"
         android:textColor="@color/black"
         android:textSize="30sp"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/backButton"
+        app:layout_constraintStart_toEndOf="@id/backButton"
+        app:layout_constraintBottom_toBottomOf="@id/backButton"
+        android:layout_marginStart="20dp"/>
 
     <ImageView
         android:id="@+id/profileIcon"
@@ -27,17 +38,18 @@
         android:src="@drawable/ic_profile"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/alinaText"
-        app:layout_constraintBottom_toBottomOf="@id/alinaText"/>
+        app:layout_constraintTop_toTopOf="@id/backButton"
+        app:layout_constraintBottom_toBottomOf="@id/backButton"/>
 
             <fragment
                 android:id="@+id/nav_host_fragment_container"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginTop="10dp"
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 app:navGraph="@navigation/nav_graph"
                 app:defaultNavHost="true"
-                app:layout_constraintTop_toBottomOf="@id/alinaText"
+                app:layout_constraintTop_toBottomOf="@id/backButton"
                 app:layout_constraintBottom_toBottomOf="@id/bottom_layout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
